@@ -84,7 +84,7 @@ import * as imgs from '../images';
 ---
 
 1. Innebygde hooks
-1. `useEffect` i detalj
+1. Mer om `useEffect`
 1. Egne hooks & typing
 1. Context & `useContext`
 
@@ -543,5 +543,822 @@ function sortByName() {
 </Step>
 
 
+<Step>
+
+
+### `useMemo`
+
+```diff 5:8
+
+```
+
+</Step>
+
+
+<Step>
+
+
+### `useMemo`
+
+```diff 7
+
+```
+
+</Step>
+
+
 </CodeSurferColumns>
 
+
+---
+
+<CodeSurferColumns themes={[dracula, github]} sizes={[1,2]}>
+
+
+<Step>
+
+
+### `Object.is`
+
+```ts
+Object.is('foo', 'foo'); // true
+```
+
+</Step>
+
+
+<Step>
+
+
+### `Object.is`
+
+```ts
+Object.is('foo', 'foo'); // true
+Object.is(NaN, NaN); // true
+```
+
+</Step>
+
+
+<Step>
+
+
+### `Object.is`
+
+```ts
+Object.is('foo', 'foo'); // true
+Object.is(NaN, NaN); // true
+Object.is(NaN, 'NaN'); // false
+```
+
+</Step>
+
+
+<Step>
+
+
+### `Object.is`
+
+```ts
+Object.is('foo', 'foo'); // true
+Object.is(NaN, NaN); // true
+Object.is(NaN, 'NaN'); // false
+Object.is({}, {}); // false
+```
+
+</Step>
+
+
+<Step>
+
+
+### `Object.is`
+
+```ts
+let foo = {};
+Object.is(foo, foo); // true
+```
+
+</Step>
+
+
+<Step>
+
+
+### `useMemo`
+
+```ts 7
+type ListProps = {
+  data: string[];
+};
+function List({ data }: ListProps) {
+  const sortedList = React.useMemo(
+    () => data.sort(sortByName),
+    [data],
+  );
+
+  return (
+    <ul>
+      {sortedList.map((val) => (
+        <li key={val}>{val}</li>
+      ))}
+    </ul>
+  );
+}
+
+function sortByName() {
+  // implementation
+}
+```
+
+</Step>
+
+
+<Step>
+
+
+### `useMemo`
+
+```ts 7
+type ListProps = {
+  data: string[];
+};
+function List({ data }: ListProps) {
+  const sortedList = React.useMemo(
+    () => data.sort(sortByName),
+    [],
+  );
+
+  return (
+    <ul>
+      {sortedList.map((val) => (
+        <li key={val}>{val}</li>
+      ))}
+    </ul>
+  );
+}
+
+function sortByName() {
+  // implementation
+}
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+
+
+---
+
+<CodeSurfer >
+
+
+```ts 3 subtitle="Hva om vi får med sort?"
+type ListProps = {
+  data: string[];
+  sortFn(val: string[]): string[];
+};
+function List({ data, sortFn }: ListProps) {
+  const sortedList = React.useMemo(() => sortFn(data), [
+    data,
+  ]);
+
+  // rest of function here...
+}
+```
+
+```ts
+type ListProps = {
+  data: string[];
+  sortFn(val: string[]): string[];
+};
+function List({ data, sortFn }: ListProps) {
+  const sortedList = React.useMemo(() => sortFn(data), [
+    data,
+    sortFn,
+  ]);
+
+  // rest of function here...
+}
+```
+
+```ts
+function MyApp() {
+  return (
+    <List data={['a', 'b', 'c']} sortFn={(l) => l.sort()} />
+  );
+}
+
+type ListProps = {
+  data: string[];
+  sortFn(val: string[]): string[];
+};
+function List({ data, sortFn }: ListProps) {
+  const sortedList = React.useMemo(() => sortFn(data), [
+    data,
+    sortFn,
+  ]);
+
+  // rest of function here...
+}
+```
+
+```ts
+function MyApp() {
+  // Hva skjer med sortFn her?
+  return (
+    <List data={['a', 'b', 'c']} sortFn={(l) => l.sort()} />
+  );
+}
+
+type ListProps = {
+  data: string[];
+  sortFn(val: string[]): string[];
+};
+function List({ data, sortFn }: ListProps) {
+  const sortedList = React.useMemo(() => sortFn(data), [
+    data,
+    sortFn,
+  ]);
+
+  // rest of function here...
+}
+```
+
+```ts
+function MyApp() {
+  const cachedSortFn = React.useCallback(
+    (l: string[]) => l.sort(),
+    [],
+  );
+  return (
+    <List data={['a', 'b', 'c']} sortFn={cachedSortFn} />
+  );
+}
+
+type ListProps = {
+  data: string[];
+  sortFn(val: string[]): string[];
+};
+function List({ data, sortFn }: ListProps) {
+  const sortedList = React.useMemo(() => sortFn(data), [
+    data,
+    sortFn,
+  ]);
+
+  // rest of function here...
+}
+```
+
+</CodeSurfer>
+
+
+---
+
+### `useEffect`
+
+---
+
+<CodeSurfer>
+
+
+```ts
+useEffect(
+  () => {
+    // function body
+  },
+  [
+    /* dependencies */
+  ],
+);
+```
+
+```ts
+function MyComponent() {
+  useEffect(
+    () => {
+      // function body
+    },
+    [
+      /* dependencies */
+    ],
+  );
+
+  return <h1>Hello, World!</h1>;
+}
+```
+
+```ts
+function MyComponent() {
+  useEffect(
+    () => {
+      // Når kjøres dette?
+    },
+    [
+      /* dependencies */
+    ],
+  );
+
+  return <h1>Hello, World!</h1>;
+}
+```
+
+```ts
+function MyComponent() {
+  useEffect(
+    () => {
+      // Hva kan kjøres inne her?
+    },
+    [
+      /* dependencies */
+    ],
+  );
+
+  return <h1>Hello, World!</h1>;
+}
+```
+
+```ts
+function MyComponent() {
+  useEffect(() => {
+    document.title = 'Hello, World!';
+  }, []);
+
+  return <h1>Hello, World!</h1>;
+}
+```
+
+```ts
+function MyComponent({ title }: { title: string }) {
+  useEffect(() => {
+    document.title = 'Hello, World!';
+  }, []);
+
+  return <h1>Hello, World!</h1>;
+}
+```
+
+```ts
+function MyComponent({ title }: { title: string }) {
+  useEffect(() => {
+    document.title = title;
+  }, []);
+
+  return <h1>{title}</h1>;
+}
+```
+
+```ts
+function MyComponent({ title }: { title: string }) {
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
+  return <h1>{title}</h1>;
+}
+```
+
+</CodeSurfer>
+
+
+---
+
+##
+
+<CodeSurferColumns themes={[dracula, github]} sizes={[1,2]}>
+
+
+<Step>
+
+
+## Bivirkninger
+
+```ts
+type AvatarProps = {
+  username: string;
+};
+
+function Avatar({ username }: AvatarProps) {
+  const [avatar, setAvatar] = React.useState<string | null>(
+    null,
+  );
+  React.useEffect(() => {
+    const getData = async () => {
+      const result = await fetch(
+        `https://api.github.com/users/${username}`,
+      );
+      const data = await result.json();
+
+      setAvatar(data.avatar_url);
+    };
+
+    getData();
+  }, [username]);
+
+  if (!avatar) {
+    return <p>Not found</p>;
+  }
+
+  return <img src={avatar} alt={username} />;
+}
+```
+
+</Step>
+
+
+<Step>
+
+
+## Bivirkninger
+
+```ts
+type AvatarProps = {
+  username: string;
+};
+
+function Avatar({ username }: AvatarProps) {
+  const [avatar, setAvatar] = React.useState<string | null>(
+    null,
+  );
+
+  if (!avatar) {
+    return <p>Not found</p>;
+  }
+
+  return <img src={avatar} alt={username} />;
+}
+```
+
+</Step>
+
+
+<Step>
+
+
+## Bivirkninger
+
+```ts 6[17:26] subtitle="Denne er ubrukt"
+type AvatarProps = {
+  username: string;
+};
+
+function Avatar({ username }: AvatarProps) {
+  const [avatar, setAvatar] = React.useState<string | null>(
+    null,
+  );
+
+  if (!avatar) {
+    return <p>Not found</p>;
+  }
+
+  return <img src={avatar} alt={username} />;
+}
+```
+
+</Step>
+
+
+<Step>
+
+
+## Bivirkninger
+
+```ts
+type AvatarProps = {
+  username: string;
+};
+
+function Avatar({ username }: AvatarProps) {
+  const [avatar, setAvatar] = React.useState<string | null>(
+    null,
+  );
+
+  React.useEffect(() => {
+    // noe med setAvatar
+  }, [username]);
+
+  if (!avatar) {
+    return <p>Not found</p>;
+  }
+
+  return <img src={avatar} alt={username} />;
+}
+```
+
+</Step>
+
+
+<Step>
+
+
+## Bivirkninger
+
+```ts
+type AvatarProps = {
+  username: string;
+};
+
+function Avatar({ username }: AvatarProps) {
+  const [avatar, setAvatar] = React.useState<string | null>(
+    null,
+  );
+
+  React.useEffect(() => {
+    fetch(`https://api.github.com/users/${username}`)
+      .then((result) => result.json())
+      .then((data) => data.avatar_url)
+      .then(setAvatar);
+  }, [username]);
+
+  if (!avatar) {
+    return <p>Not found</p>;
+  }
+
+  return <img src={avatar} alt={username} />;
+}
+```
+
+</Step>
+
+
+<Step>
+
+
+## Bivirkninger
+
+```ts subtitle="Hva med async/await?"
+type AvatarProps = {
+  username: string;
+};
+
+function Avatar({ username }: AvatarProps) {
+  const [avatar, setAvatar] = React.useState<string | null>(
+    null,
+  );
+
+  React.useEffect(() => {
+    fetch(`https://api.github.com/users/${username}`)
+      .then((result) => result.json())
+      .then((data) => data.avatar_url)
+      .then(setAvatar);
+  }, [username]);
+
+  if (!avatar) {
+    return <p>Not found</p>;
+  }
+
+  return <img src={avatar} alt={username} />;
+}
+```
+
+</Step>
+
+
+<Step>
+
+
+## Bivirkninger
+
+```ts subtitle="Hva med async/await?"
+type AvatarProps = {
+  username: string;
+};
+
+function Avatar({ username }: AvatarProps) {
+  const [avatar, setAvatar] = React.useState<string | null>(
+    null,
+  );
+
+  React.useEffect(() => {
+    const getData = async () => {};
+  }, [username]);
+
+  if (!avatar) {
+    return <p>Not found</p>;
+  }
+
+  return <img src={avatar} alt={username} />;
+}
+```
+
+</Step>
+
+
+<Step>
+
+
+## Bivirkninger
+
+```ts subtitle="Hva med async/await?"
+type AvatarProps = {
+  username: string;
+};
+
+function Avatar({ username }: AvatarProps) {
+  const [avatar, setAvatar] = React.useState<string | null>(
+    null,
+  );
+
+  React.useEffect(() => {
+    const getData = async () => {
+      const result = await fetch(
+        `https://api.github.com/users/${username}`,
+      );
+      const data = await result.json();
+      setAvatar(data.avatar_url);
+    };
+    getData();
+  }, [username]);
+
+  if (!avatar) {
+    return <p>Not found</p>;
+  }
+
+  return <img src={avatar} alt={username} />;
+}
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+
+
+---
+
+<CodeSurferColumns>
+
+
+<Step>
+
+
+## Clean-up
+
+```ts subtitle="Hva om vi har noe som dette?"
+type AvatarProps = {
+  username: string;
+};
+
+function Avatar({ username }: AvatarProps) {}
+
+function App() {
+  const [username, setUsername] = React.useState<string>(
+    'mikaelbr',
+  );
+  const toggle = () =>
+    setUsername(
+      username === 'mikaelbr'
+        ? 'mathiasflaatt'
+        : 'mikaelbr',
+    );
+
+  return (
+    <div className="App">
+      <div>
+        <button onClick={toggle}>Toggle avatar</button>
+      </div>
+      <Avatar username={username} />
+    </div>
+  );
+}
+```
+
+</Step>
+
+
+<Step>
+
+
+## Clean-up
+
+```ts subtitle="Mye unødvendig API kall"
+type AvatarProps = {
+  username: string;
+};
+
+function Avatar({ username }: AvatarProps) {
+  const [avatar, setAvatar] = React.useState<string | null>(
+    null,
+  );
+
+  React.useEffect(() => {
+    const getData = async () => {
+      const result = await fetch(
+        `https://api.github.com/users/${username}`,
+      );
+      const data = await result.json();
+      setAvatar(data.avatar_url);
+    };
+    getData();
+  }, [username]);
+
+  if (!avatar) {
+    return <p>Not found</p>;
+  }
+
+  return <img src={avatar} alt={username} />;
+}
+
+function App() {}
+```
+
+</Step>
+
+
+<Step>
+
+
+## Clean-up
+
+```ts subtitle="Kan bruke cleanup i effects"
+type AvatarProps = {
+  username: string;
+};
+
+function Avatar({ username }: AvatarProps) {
+  const [avatar, setAvatar] = React.useState<string | null>(
+    null,
+  );
+
+  React.useEffect(() => {
+    const controller = new AbortController();
+    const getData = async () => {
+      const opts = { signal: controller.signal };
+      const result = await fetch(
+        `https://api.github.com/users/${username}`,
+        opts,
+      );
+      const data = await result.json();
+
+      setAvatar(data.avatar_url);
+    };
+
+    getData();
+    return () => controller.abort();
+  }, [username]);
+
+  if (!avatar) {
+    return <p>Not found</p>;
+  }
+
+  return <img src={avatar} alt={username} />;
+}
+
+function App() {}
+```
+
+</Step>
+
+
+<Step>
+
+
+## Clean-up
+
+```ts subtitle="http://var.show/akva-cleanup"
+type AvatarProps = {
+  username: string;
+};
+
+function Avatar({ username }: AvatarProps) {
+  const [avatar, setAvatar] = React.useState<string | null>(
+    null,
+  );
+
+  React.useEffect(() => {
+    const controller = new AbortController();
+    const getData = async () => {
+      const opts = { signal: controller.signal };
+      const result = await fetch(
+        `https://api.github.com/users/${username}`,
+        opts,
+      );
+      const data = await result.json();
+
+      setAvatar(data.avatar_url);
+    };
+
+    getData();
+    return () => controller.abort();
+  }, [username]);
+
+  if (!avatar) {
+    return <p>Not found</p>;
+  }
+
+  return <img src={avatar} alt={username} />;
+}
+
+function App() {}
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+
+
+---
+
+## Custom Hooks
