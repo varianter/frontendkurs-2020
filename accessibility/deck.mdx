@@ -1,0 +1,514 @@
+import {
+  CodeSurfer,
+  CodeSurferColumns,
+  Step,
+} from 'code-surfer';
+
+import {
+  Image,
+  Invert,
+  Notes,
+  Split,
+  SplitRight,
+  Appear,
+  Head,
+} from 'mdx-deck';
+
+import { github, dracula } from '@code-surfer/themes';
+import customTheme from '../custom-theme';
+export const theme = customTheme(dracula);
+
+import ImageLayout from '../image-split-layout';
+import * as imgs from './images';
+
+<Head>
+  <title>Frontendkurs – Universell Utforming</title>
+  {Object.values(imgs).map(function (img) {
+    <link rel="preload" as="image" href={img} />;
+  })}
+</Head>
+
+<Image
+  src={imgs.bg}
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: '1rem',
+    color: 'black',
+    backgroundColor: 'black',
+  }}
+>
+
+
+# Frontendkurs 2020
+
+</Image>
+
+
+---
+
+## Agenda
+
+1. Universell utforming
+1. React & TypeScript
+1. React Hooks
+1. Applikasjoner og testing
+
+---
+
+<Image
+  src={imgs.bg}
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: '1rem',
+    color: 'black',
+    backgroundColor: 'black',
+  }}
+>
+
+
+## Universell utforming
+
+</Image>
+
+
+<Notes>
+  
+  I oppstartsmøtet av dette kurset snakket jeg litt om Universell Utforming.
+  Flesteparten av dere svarte at dere ikke var motivert til å lære noe om det,
+  men så viktigheten av det og anerkjente at det var mye å lære.
+
+
+Jeg snakket også om hvorfor vi skal bry oss om UU. Selv for private selskap
+som ikke leverer tjenester til allmen tilgjengelighet.
+
+I denne delen skal jeg gå litt mer i dybden på hvorfor UU og ikke minst hvordan.
+Det kan både være vanskeligere og enklere enn man tror!
+
+</Notes>
+
+
+---
+
+<Image src={imgs.difi} />
+
+<Notes>
+
+
+I Norge er det krav om UU for offentlige _og_ private selskaper som lager tjenester for allmen tilgjengelighet.
+Nå passer ikke alle private selskap inn under dette, foreløpig, men det skjer en del endringer rundt kravene som kan gjøre
+at det også en dag treffer for interne løsninger som ikke er for allmenhet.
+
+For tiden jobbes det også med Webdirektivet i EU som Norge blir en del av. Det er ikke tredd i kraft enda,
+men der snakkes det f.eks om hvilke det skal gjelde. Kun offentlig, alle eller offentlig og private selskap
+over en viss størrelse.
+
+MEN, det at det ikke nødvendigvis er et krav til private selskap i dag, betyr ikke at løsninger som blir levert ikke
+burde følge en viss form for universell utforming. For det første kan det fint være folk med forskjellige
+synsutfordringer som jobber i fiskerinæringen, men det øker også generell kvalitet i løsninger. Det er mange
+prinsipper som går utover tilgjengelighet for svaksynte f.eks. Men generelle prinsipper som også gjør
+løsninger bedre.
+
+</Notes>
+
+
+---
+
+<Image src={imgs.difi2} />
+
+<Notes>
+
+
+Det er standarden WCAG 2.0 som gjelder (og etterhvert 2.1). Her er det en liste med flere krav
+på ulike nivå og satt at nettsider må oppfylle minst 35 av disse kravene.
+
+Men når det er sagt, trenger det ikke å være så vanskelig.
+
+</Notes>
+
+
+---
+
+### Du kommer langt med...
+
+- Gyldig Semantisk HTML
+- Gode kontraster
+- Tastaturnavigasjon
+- Tekstbeskrivelse av ikke-tekstlige elementer
+
+---
+
+<Image src={imgs.arngren} />
+
+<Notes>
+
+
+Det er ikke en frontendpresentasjon uten å måtte nevne Arngren. Her kan vi se et
+eksempel på noe vi kan prøve å unngå.
+
+(Se eksempel med ChromeVox og Arngren. Totalt ubrukelig)
+
+</Notes>
+
+
+---
+
+## Kontraster og farger
+
+<Notes>
+
+
+Ofte noe som mange tenker på som ansvarsområdet til designere. Men som med alt
+i produktutvikling er produktet alles ansvar. Også utviklere må ta stilling til
+kontrast.
+
+Det er mange settinger hvor vi bruker farger i forskjellige kombinasjoner, så vi må
+sikre at vi ikke bryter med retningslinjer. Dette er enkelt å fikse, men også enkelt
+å innføre. Men det er ofte en quick win.
+
+</Notes>
+
+
+---
+
+<Image src={imgs.webaim} />
+
+<Notes>
+
+
+En måte å sjekke det på er via WebAIM sin color contrast checker. Dette er manuelt, men
+enkelt for å bare kontrollere når du lurer på om det er nok.
+
+Det finnes også automatiske verktøy som vi skal se på litt senere.
+
+</Notes>
+
+
+---
+
+<CodeSurferColumns themes={[dracula, github]} sizes={[1,2]}>
+
+
+<Step>
+
+
+## Semantisk HTML
+
+```html
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+```
+
+</Step>
+
+
+<Step>
+
+
+## Semantisk HTML
+
+```html
+<article></article>
+<section></section>
+<nav></nav>
+<aside></aside>
+<figure></figure>
+<h[1-6]></[1-6]>
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+
+
+<Notes>
+
+
+En annen quickwin for tilgjengelighet er er semantisk web og korrekt hierarki.
+
+Mange skjermlesere og støtteverktøy er avhengig av godt hierarkiet til å navigere igjennom innhold.
+
+Og dette er strengt tatt veldig enkelt å bare få til.
+
+</Notes>
+
+
+---
+
+<CodeSurfer>
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>My Turtles Fanpage</title>
+  </head>
+  <body>
+    <div>
+      <div>
+        <h1>My Turtles Fanpage</h1>
+
+        <div>
+          <a href="/">Home!</a
+          <a href="/">Pizza!</a>
+        </div>
+      </div>
+
+      <main id="main">
+        <div>
+          <div>
+            <h2>Chuck Lorre</h2>
+          </div>
+
+          <p>Writer of the theme song!</p>
+        </div>
+
+        <div>
+          <div>
+            <h2>Too violent?</h2>
+          </div>
+
+          <p>Writer of the theme song!</p>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
+```
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>My Turtles Fanpage</title>
+  </head>
+  <body>
+    <div>
+      <header>
+        <a class="skip-to-content-link" href="#main">
+          Skip to content
+        </a>
+
+        <h1>My Turtles Fanpage</h1>
+
+        <nav>
+          <ul>
+            <li><a href="/">Home!</a></li>
+            <li><a href="/">Pizza!</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <main id="main">
+        <article>
+          <header>
+            <h2>Chuck Lorre</h2>
+          </header>
+
+          <p>Writer of the theme song!</p>
+        </article>
+
+        <article>
+          <header>
+            <h2>Too violent?</h2>
+          </header>
+
+          <p>Writer of the theme song!</p>
+        </article>
+      </main>
+    </div>
+  </body>
+</html>
+```
+
+</CodeSurfer>
+
+
+---
+
+<ImageLayout isRight  img={imgs.keyboard}>
+
+
+## Tastaturnavigasjon
+
+</ImageLayout>
+
+
+<Notes>
+
+
+Et annet viktig aspekt er keyboard navigasjon. Evnen i å kunne gå igjennom
+sidene bare med å bruke tastaturet. Følger man gyldig HTML er mye gjort,
+men med enkelte avanserte JavaScript komponenter som f.eks autocomplete,
+dropdowns osv kan det være vanskelig å få rett.
+
+Det lar seg løse, men det krever at vi er oppmerksom og tester etter det.
+
+Vær oppmerksom på at tastaturnavigasjon med skjermlesere er annerledes
+enn vanlig tastaturnavigasjon.
+
+</Notes>
+
+
+---
+
+<CodeSurferColumns themes={[dracula, github]} sizes={[1,1]}>
+
+
+<Step>
+
+
+## Tastaturnavigasjon
+
+```html
+<!-- Deaktiver tastatur -->
+<button tabindex="-1">Hello</button>
+
+<!-- Følg vanlig flyt -->
+<button tabindex="0">Hello</button>
+
+<!-- Følg eksplisitt flyt -->
+<button tabindex="1">Hello</button>
+<button tabindex="N">Hello</button>
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+
+
+---
+
+# WAI-ARIA
+
+<Notes>
+
+
+I tilfeller der hvor det ikke finnes funksjonalitet i nettleser, eller
+det er andre avanserte ting vi gjør hvor vanlig HTML ikke strekker til,
+finnes det et sett med ARIA-attributter til HTML som gir Nettleseren
+ekstra kontekst i hva som foregår.
+
+</Notes>
+
+
+---
+
+<CodeSurferColumns themes={[github, dracula]} sizes={[1,1]}>
+
+
+<Step>
+
+
+<Inverted>
+
+
+## `aria-*`
+
+Et hav av muligheter
+
+</Inverted>
+
+
+```html
+<div class="text">
+  <label id="tp1-label" for="first">First Name:</label>
+  <input
+    type="text"
+    id="first"
+    name="first"
+    aria-labelledby="tp1-label"
+    aria-describedby="tp1"
+    aria-required="false"
+  />
+  <div
+    id="tp1"
+    class="tooltip"
+    role="tooltip"
+    aria-hidden="true"
+  >
+    Your first name is optional
+  </div>
+</div>
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+
+
+---
+
+<CodeSurferColumns themes={[github, dracula]} sizes={[1,1]}>
+
+
+<Step subtitle="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles">
+
+
+<Inverted>
+
+
+## `role`
+
+</Inverted>
+
+
+```html
+<!-- Tilfeller hvor det skal ignoreres -->
+<div role="none"></div>
+
+<!-- Landemerke for søk -->
+<div role="search"></div>
+
+<!-- For å indikere tab-widgets -->
+<div role="tab"></div>
+<div role="tabpanel"></div>
+
+<!-- ...og mange flere -->
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+
+
+---
+
+## Verktøy
+
+1. Bruk av skjermleser. F.eks [ChromeVox](https://chrome.google.com/webstore/detail/chromevox-classic-extensi/kgejglhpjiefppelpmljglcjbhoiplfn)
+1. Testverktøy som
+   1. [axe](https://www.deque.com/axe/)
+   1. [wave](https://wave.webaim.org/)
+
+---
+
+## Også for CI
+
+### f.eks [pa11y-ci](https://github.com/pa11y/pa11y-ci)
+
+---
+
+# Case

@@ -1,0 +1,1158 @@
+import {
+  CodeSurfer,
+  CodeSurferColumns,
+  Step,
+} from 'code-surfer';
+
+import {
+  Image,
+  Invert,
+  Notes,
+  Split,
+  SplitRight,
+  Appear,
+  Head,
+} from 'mdx-deck';
+
+import { github, dracula } from '@code-surfer/themes';
+import customTheme from '../custom-theme';
+export const theme = customTheme(dracula);
+
+import ImageLayout from '../image-split-layout';
+import * as imgs from '../images';
+
+<Head>
+  <title>Frontendkurs – React & TypeScript</title>
+  {Object.values(imgs).map(function (img) {
+    <link rel="preload" as="image" href={img} />;
+  })}
+</Head>
+
+<Image
+  src={imgs.bg}
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: '1rem',
+    color: 'black',
+    backgroundColor: 'black',
+  }}
+>
+
+
+# Frontendkurs 2020
+
+</Image>
+
+
+---
+
+## Agenda
+
+1. ~~Universell utforming~~
+1. React & TypeScript
+1. React Hooks
+1. Applikasjoner og testing
+
+---
+
+<Image
+  src={imgs.bg}
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: '1rem',
+    color: 'black',
+    backgroundColor: 'black',
+  }}
+>
+
+
+## React & TypeScript
+
+</Image>
+
+
+<Notes>
+
+
+De fleste her bruker vel nå TypeScript. Men det var flere som nevnte at de gjerne
+kunne tenke seg å høre om TypeScript og React, og kanskje gjerne mer avanserte
+features av TypeScript.
+
+Så da tenker jeg det var passende å se på de punktene man ofte bruker TypeScript
+sammen med React og hvordan man kan bruke det.
+
+</Notes>
+
+
+---
+
+1. Typing av komponenter
+1. Typing av generic components
+1. Typing av wrappers
+1. Union types
+
+<Notes>
+
+
+Vi kommer til å dekke ulike behov her, fra typing av komponenter direkte til generics i komponenter,
+Høyere Ordens Komponenter eller wrappers og hvordan man kan bruke unions i params
+for å lage bedre API-er for komponenter.
+
+</Notes>
+
+
+---
+
+<CodeSurfer>
+
+
+```jsx
+export default function Button({ mode, children }) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button className={and(css.button, modifier)}>
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```jsx 1:1
+export default function Button({ mode, children }) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button className={and(css.button, modifier)}>
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts
+type ButtonProps = {
+  mode: string;
+};
+
+export default Button;
+
+const Button: React.FC<ButtonProps> = function Button({
+  mode,
+  children,
+}) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button className={and(css.button, modifier)}>
+      {children}
+    </button>
+  );
+};
+
+const and = (...classNames) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts 7:10 subtitle="Har sine utfordringer"
+type ButtonProps = {
+  mode: string;
+};
+
+export default Button;
+
+const Button: React.FC<ButtonProps> = function Button({
+  mode,
+  children,
+}) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button className={and(css.button, modifier)}>
+      {children}
+    </button>
+  );
+};
+
+const and = (...classNames) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts subtitle="Alternativt"
+type ButtonProps = {
+  mode: string;
+};
+
+export default function Button({
+  mode,
+  children,
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button className={and(css.button, modifier)}>
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts 7 subtitle="Hva med children?"
+type ButtonProps = {
+  mode: string;
+};
+
+export default function Button({
+  mode,
+  children,
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button className={and(css.button, modifier)}>
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts 7 subtitle="Hva med children?"
+type ButtonProps = {
+  mode: string;
+};
+
+export default function Button({
+  mode,
+  children,
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button className={and(css.button, modifier)}>
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts
+type ButtonProps = {
+  mode: string;
+  children: React.ReactNode;
+};
+
+export default function Button({
+  mode,
+  children,
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button className={and(css.button, modifier)}>
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts
+type ButtonProps = React.PropsWithChildren<{
+  mode: string;
+}>;
+
+export default function Button({
+  mode,
+  children,
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button className={and(css.button, modifier)}>
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+</CodeSurfer>
+
+
+---
+
+<CodeSurfer>
+
+
+```ts
+type ButtonProps = {
+  mode: string;
+  children: React.ReactNode;
+};
+```
+
+```ts 3[13:27]
+type ButtonProps = {
+  mode: string;
+  children: React.ReactNode;
+};
+```
+
+```ts subtitle="Alt som er gyldig"
+type ReactNode =
+  | ReactChild
+  | ReactFragment
+  | ReactPortal
+  | boolean
+  | null
+  | undefined;
+```
+
+</CodeSurfer>
+
+
+---
+
+<CodeSurfer>
+
+
+```ts 4
+type ButtonProps = {
+  mode: string;
+  children: React.ReactNode;
+  icon: '???';
+};
+```
+
+```ts 4
+type ButtonProps = {
+  mode: string;
+  children: React.ReactNode;
+  icon: React.ReactNode;
+};
+```
+
+```ts 4
+type ButtonProps = {
+  mode: string;
+  children: React.ReactNode;
+  icon: JSX.Element;
+};
+```
+
+```ts subtitle="JSX.Element = Det React.FC returnerer "
+namespace JSX {
+  interface Element extends React.ReactElement<any, any> {}
+}
+
+interface ReactElement<P, T> {
+  type: T;
+  props: P;
+  key: Key | null;
+}
+```
+
+</CodeSurfer>
+
+
+---
+
+<CodeSurfer>
+
+
+```ts subtitle="Return type infereres"
+type ButtonProps = React.PropsWithChildren<{
+  mode: string;
+  icon: JSX.Element;
+}>;
+
+export default function Button({
+  mode,
+  icon,
+  children,
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button className={and(css.button, modifier)}>
+      {icon}
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames: (string | undefined)[]) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts subtitle="Men vi mangler mange props, som f.eks onClick"
+type ButtonProps = React.PropsWithChildren<{
+  mode: string;
+  icon: JSX.Element;
+}>;
+
+export default function Button({
+  mode,
+  icon,
+  children,
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button className={and(css.button, modifier)}>
+      {icon}
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames: (string | undefined)[]) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts subtitle="Men vi mangler mange props, som f.eks onClick"
+type ButtonProps = React.PropsWithChildren<{
+  mode: string;
+  icon: JSX.Element;
+}>;
+
+export default function Button({
+  mode,
+  icon,
+  children,
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button className={and(css.button, modifier)}>
+      {icon}
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames: (string | undefined)[]) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts
+type ButtonProps = {
+  mode: string;
+  icon: JSX.Element;
+} & JSX.IntrinsicElements['button'];
+
+export default function Button({
+  mode,
+  icon,
+  children,
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button className={and(css.button, modifier)}>
+      {icon}
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames: (string | undefined)[]) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts
+type ButtonProps = {
+  mode: string;
+  icon: JSX.Element;
+} & JSX.IntrinsicElements['button'];
+
+export default function Button({
+  mode,
+  icon,
+  children,
+  onClick,
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button
+      className={and(css.button, modifier)}
+      onClick={onClick}
+    >
+      {icon}
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames: (string | undefined)[]) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts
+type ButtonProps = {
+  mode: string;
+  icon: JSX.Element;
+} & JSX.IntrinsicElements['button'];
+
+export default function Button({
+  mode,
+  icon,
+  children,
+  ...props
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button
+      className={and(css.button, modifier)}
+      {...props}
+    >
+      {icon}
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames: (string | undefined)[]) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts 4[4:35]
+type ButtonProps = {
+  mode: string;
+  icon: JSX.Element;
+} & JSX.IntrinsicElements['button'];
+
+export default function Button({
+  mode,
+  icon,
+  children,
+  ...props
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button
+      className={and(css.button, modifier)}
+      {...props}
+    >
+      {icon}
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames: (string | undefined)[]) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+</CodeSurfer>
+
+
+---
+
+<CodeSurfer>
+
+
+```ts
+type MyType = {
+  foo: { prop1: string };
+};
+
+type MySubType = MyType['foo'];
+
+const data: MySubType = { prop1: 'hello' };
+```
+
+```ts
+type MyType = {
+  foo: { prop1: string };
+};
+
+const value: MyType = { foo: { prop1: 'Bye' } };
+
+const data: MySubType = { prop1: 'hello' };
+```
+
+```ts
+type MyType = {
+  foo: { prop1: string };
+};
+
+const value: MyType = { foo: { prop1: 'Bye' } };
+
+type MySubType = typeof value['foo'];
+
+const data: MySubType = { prop1: 'hello' };
+```
+
+```ts
+import Button from './button';
+
+type ThisIsString = React.ComponentProps<
+  typeof Button
+>['mode'];
+
+const data: MySubType = { prop1: 'hello' };
+```
+
+</CodeSurfer>
+
+
+---
+
+<CodeSurfer>
+
+
+```ts
+type ButtonProps = {
+  mode: string;
+  icon: JSX.Element;
+} & JSX.IntrinsicElements['button'];
+
+export default function Button({
+  mode,
+  icon,
+  children,
+  ...props
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button
+      className={and(css.button, modifier)}
+      {...props}
+    >
+      {icon}
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames: (string | undefined)[]) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts subtitle="Hva om vi vil unngå ref?"
+type ButtonProps = {
+  mode: string;
+  icon: JSX.Element;
+} & Omit<JSX.IntrinsicElements['button'], 'ref'>;
+
+export default function Button({
+  mode,
+  icon,
+  children,
+  ...props
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button
+      className={and(css.button, modifier)}
+      {...props}
+    >
+      {icon}
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames: (string | undefined)[]) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts subtitle="Innebygget metode"
+type ButtonProps = {
+  mode: string;
+  icon: JSX.Element;
+} & React.PropsWithoutRef<JSX.IntrinsicElements['button']>;
+
+export default function Button({
+  mode,
+  icon,
+  children,
+  ...props
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button
+      className={and(css.button, modifier)}
+      {...props}
+    >
+      {icon}
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames: (string | undefined)[]) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+</CodeSurfer>
+
+
+---
+
+<CodeSurfer>
+
+
+```ts 2,13 subtitle="Dette er dårlig API"
+type ButtonProps = {
+  mode: string;
+  icon: JSX.Element;
+} & React.PropsWithoutRef<JSX.IntrinsicElements['button']>;
+
+export default function Button({
+  mode,
+  icon,
+  children,
+  ...props
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button
+      className={and(css.button, modifier)}
+      {...props}
+    >
+      {icon}
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames: (string | undefined)[]) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+```ts 2,13 subtitle="Vi kan gjøre det bedre med union types"
+type ButtonProps = {
+  mode: 'primary' | 'destructive';
+  icon: JSX.Element;
+} & React.PropsWithoutRef<JSX.IntrinsicElements['button']>;
+
+export default function Button({
+  mode,
+  icon,
+  children,
+  ...props
+}: ButtonProps) {
+  const modifier =
+    mode === 'primary' ? css.button__primary : undefined;
+
+  return (
+    <button
+      className={and(css.button, modifier)}
+      {...props}
+    >
+      {icon}
+      {children}
+    </button>
+  );
+}
+
+const and = (...classNames: (string | undefined)[]) =>
+  classNames.filter(Boolean).join(' ');
+```
+
+</CodeSurfer>
+
+
+---
+
+## Type hjelp og unions
+
+---
+
+<CodeSurfer>
+
+
+```ts subtitle="Vi kan være mer behjelpelig"
+type ButtonProps = (
+  | {
+      mode: 'primary';
+    }
+  | {
+      mode: 'destructive';
+      icon: JSX.Element;
+    }
+) &
+  React.PropsWithoutRef<JSX.IntrinsicElements['button']>;
+
+export default function Button({
+  children,
+  ...props
+}: ButtonProps) {
+  /* Implementation */
+}
+
+// Does not compile. Icon not a property
+const foo = <Button mode="primary" icon={<span />} />;
+
+// Does compile! Icon is a property :thumbsup:
+const foo = <Button mode="destructive" icon={<span />} />;
+```
+
+```ts 2:8
+type ButtonProps = (
+  | {
+      mode: 'primary';
+    }
+  | {
+      mode: 'destructive';
+      icon: JSX.Element;
+    }
+) &
+  React.PropsWithoutRef<JSX.IntrinsicElements['button']>;
+
+export default function Button({
+  children,
+  ...props
+}: ButtonProps) {
+  /* Implementation */
+}
+
+// Does not compile. Icon not a property
+const foo = <Button mode="primary" icon={<span />} />;
+
+// Does compile! Icon is a property :thumbsup:
+const foo = <Button mode="destructive" icon={<span />} />;
+```
+
+```ts 19:26
+type ButtonProps = (
+  | {
+      mode: 'primary';
+    }
+  | {
+      mode: 'destructive';
+      icon: JSX.Element;
+    }
+) &
+  React.PropsWithoutRef<JSX.IntrinsicElements['button']>;
+
+export default function Button({
+  children,
+  ...props
+}: ButtonProps) {
+  /* Implementation */
+}
+
+// Does not compile. Icon not a property
+const foo = <Button mode="primary" icon={<span />} />;
+
+// Does compile! Icon is a property :thumbsup:
+const foo = <Button mode="destructive" icon={<span />} />;
+```
+
+```ts subtitle="Hjelper oss også i implementasjonen"
+type ButtonProps = (
+  | {
+      mode: 'primary';
+    }
+  | {
+      mode: 'destructive';
+      icon: JSX.Element;
+    }
+) &
+  React.PropsWithoutRef<JSX.IntrinsicElements['button']>;
+
+export default function Button({
+  children,
+  ...props
+}: ButtonProps) {
+  // Here we get type hinting on icon when mode is destructive
+  const icon = props.mode !== 'primary' ? props.icon : null;
+
+  const modifier =
+    props.mode === 'primary'
+      ? css.button__primary
+      : css.button__destructive;
+
+  return (
+    <button
+      className={and(css.button, modifier)}
+      {...props}
+    >
+      {icon}
+      {children}
+    </button>
+  );
+}
+
+// Does not compile. Icon not a property
+const foo = <Button mode="primary" icon={<span />} />;
+
+// Does compile! Icon is a property :thumbsup:
+const foo = <Button mode="destructive" icon={<span />} />;
+```
+
+</CodeSurfer>
+
+
+---
+
+## Generics
+
+---
+
+<CodeSurfer>
+
+
+```ts
+type SelectProps = {
+  data: Array<number | string>;
+  onClick(val: number | string): void;
+};
+const Select: React.FC<SelectProps> = ({
+  data,
+  onClick,
+}) => {
+  return (
+    <ul>
+      {data.map((val) => (
+        <li>
+          <button onClick={() => onClick(val)}>
+            {val}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+};
+```
+
+```ts
+const myComp = (
+  <Select
+    data={[1, 2, 3]}
+    onClick={(val) =>
+      console.log('Is val string or number???')
+    }
+  />
+);
+```
+
+```ts subtitle="Enda verre, kan blande verdier"
+const myComp = (
+  <Select
+    data={[1, 'hello', 3]}
+    onClick={(val) => console.log(' :o ')}
+  />
+);
+```
+
+```ts 1:4
+type SelectProps<T = string | number> = {
+  data: Array<T>;
+  onClick(val: T): void;
+};
+const Select: React.FC<SelectProps> = ({
+  data,
+  onChange,
+}) => {
+  return (
+    <ul>
+      {data.map((val) => (
+        <li>
+          <button onClick={() => onClick(val)}>
+            {val}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+};
+```
+
+```ts 5
+type SelectProps<T = string | number> = {
+  data: Array<T>;
+  onClick(val: T): void;
+};
+const Select: React.FC<SelectProps> = ({
+  data,
+  onChange,
+}) => {
+  return (
+    <ul>
+      {data.map((val) => (
+        <li>
+          <button onClick={() => onClick(val)}>
+            {val}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+};
+```
+
+```ts 5,8
+type SelectProps<T = string | number> = {
+  data: Array<T>;
+  onClick(val: T): void;
+};
+function Select<T = string | number>({
+  data,
+  onChange,
+}: SelectProps<T>) => {
+  return (
+    <ul>
+      {data.map((val) => (
+        <li>
+          <button onClick={() => onClick(val)}>
+            {val}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+};
+```
+
+```ts subtitle="Kan fortsatt blande verdier"
+const myComp = (
+  <Select
+    data={[1, 'hello', 3]}
+    onClick={(val) => console.log(' :o ')}
+  />
+);
+```
+
+```ts 7:12
+type SelectProps<T = string | number> = {
+  data: Array<T>;
+  onClick(val: T): void;
+};
+
+// Function overloading
+function Select(props: SelectProps<number>): JSX.Element;
+function Select(props: SelectProps<string>): JSX.Element;
+function Select({
+  data,
+  onClick,
+}: SelectProps<number | string>) {
+  return (
+    <ul>
+      {data.map((val) => (
+        <li>
+          <button onClick={() => onClick(val)}>
+            {val}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+</CodeSurfer>
+
+
+---
+
+<CodeSurfer>
+
+
+```ts
+type SelectProps<T> = {
+  data: Array<T>;
+  onClick(val: T): void;
+  itemToString(val: T): string;
+};
+
+function Select<T>({
+  data,
+  onClick,
+  itemToString,
+}: SelectProps<T>) {
+  return (
+    <ul>
+      {data.map((val) => (
+        <li>
+          <button onClick={() => onClick(val)}>
+            {itemToString(val)}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+```ts
+const mySelect = (
+  <Select<number>
+    data={[1, 2, 3]}
+    itemToString={String}
+    onClick={console.log}
+  />
+);
+```
+
+```ts
+const mySelect = (
+  <Select
+    data={[1, 2, 3]}
+    itemToString={String}
+    onClick={console.log}
+  />
+);
+```
+
+</CodeSurfer>
+
+
+---
+
+## Case
+
+http://var.show/akva-case2

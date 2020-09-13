@@ -1,0 +1,547 @@
+import {
+  CodeSurfer,
+  CodeSurferColumns,
+  Step,
+} from 'code-surfer';
+
+import {
+  Image,
+  Invert,
+  Notes,
+  Split,
+  SplitRight,
+  Appear,
+  Head,
+} from 'mdx-deck';
+
+import { github, dracula } from '@code-surfer/themes';
+import customTheme from '../custom-theme';
+export const theme = customTheme(dracula);
+
+import ImageLayout from '../image-split-layout';
+import * as imgs from '../images';
+
+<Head>
+  <title>Frontendkurs – React Hooks</title>
+  {Object.values(imgs).map(function (img) {
+    <link rel="preload" as="image" href={img} />;
+  })}
+</Head>
+
+<Image
+  src={imgs.bg}
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: '1rem',
+    color: 'black',
+    backgroundColor: 'black',
+  }}
+>
+
+
+# Frontendkurs 2020
+
+</Image>
+
+
+---
+
+## Agenda
+
+1. ~~Universell utforming~~
+1. ~~React & TypeScript~~
+1. React Hooks
+1. Applikasjoner og testing
+
+---
+
+<Image
+  src={imgs.bg}
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: '1rem',
+    color: 'black',
+    backgroundColor: 'black',
+  }}
+>
+
+
+## React Hooks
+
+</Image>
+
+
+<Notes>
+
+
+</Notes>
+
+
+---
+
+1. Innebygde hooks
+1. `useEffect` i detalj
+1. Egne hooks & typing
+1. Context & `useContext`
+
+---
+
+## The why
+
+<Notes>
+
+
+Men hvorfor er det en greie?
+
+Kort oppsummert: Målet er gjenbrukbarhet. Med tidligere måter å håndtere
+lokal tilstand på så så man at det var vanskelig å dele det på tvers av komponenter
+på en naturlig måte.
+
+For de som har skrevet React lenge er det ikke så ulikt et konsept fra tidlige dager
+med mixins, bare at dette er en noe mer funksjonell tilnærmingsmåte.
+
+</Notes>
+
+
+---
+
+<CodeSurferColumns themes={[dracula, github]} sizes={[1,2]}>
+
+
+<Step>
+
+
+## The how
+
+```ts
+import React, { useState } from 'react';
+
+function CounterButton() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      {count}
+    </button>
+  );
+}
+```
+
+</Step>
+
+
+<Step>
+
+
+## The how
+
+```md
+1. Kun på toppnivå
+2. Ikke noe conditionals
+3. Kun fra komponenter (eller via custom hooks)
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+
+
+<Notes>
+
+
+Hooks! Selv om det ikke har fjernet støtte for noe som har eksistert
+fra før så har det erstattet det meste av etablerte patterns i React.
+
+</Notes>
+
+
+---
+
+## Forskjellige typer hooks
+
+1. Tilstand (`useState`, `useReducer`, `useContext`)
+1. Lytting på data (`useEffect`, `useCallback`, `useMemo`, ++)
+1. Hjelpe-hooks (`useRef`, ++)
+
+---
+
+## Tilstand
+
+---
+
+<CodeSurfer>
+
+
+```ts
+import React, { useState } from 'react';
+
+function CounterButton() {
+  const [count, setCount] = useState<number>(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      {count}
+    </button>
+  );
+}
+```
+
+```ts 4[37:44]
+import React, { useState } from 'react';
+
+function CounterButton() {
+  const [count, setCount] = useState<number>(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      {count}
+    </button>
+  );
+}
+```
+
+```ts 4[45:47]
+import React, { useState } from 'react';
+
+function CounterButton() {
+  const [count, setCount] = useState<number>(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      {count}
+    </button>
+  );
+}
+```
+
+```ts 4[9:26]
+import React, { useState } from 'react';
+
+function CounterButton() {
+  const [count, setCount] = useState<number>(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      {count}
+    </button>
+  );
+}
+```
+
+```ts
+import React, { useState } from 'react';
+
+function CounterButton() {
+  const stateTuple: [
+    number,
+    (newValue: number) => void,
+  ] = useState<number>(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      {count}
+    </button>
+  );
+}
+```
+
+```ts
+import React, { useState } from 'react';
+
+function CounterButton() {
+  const stateTuple: [
+    number,
+    (newValue: number) => void,
+  ] = useState<number>(0);
+
+  const [count, setCount] = stateTuple;
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      {count}
+    </button>
+  );
+}
+```
+
+```ts
+import React, { useState } from 'react';
+
+function CounterButton() {
+  const [count, setCount] = useState<number>(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      {count}
+    </button>
+  );
+}
+```
+
+```ts
+import React, { useState } from 'react';
+
+function CounterButton() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      {count}
+    </button>
+  );
+}
+```
+
+</CodeSurfer>
+
+
+---
+
+<CodeSurferColumns themes={[dracula, github]} sizes={[1,2]}>
+
+
+<Step>
+
+
+## Også for komplekse objekter
+
+```ts
+import React, { useState } from 'react';
+
+function CounterButton() {
+  const [state, setState] = useState({ count: 0, next: 1 });
+
+  return (
+    <button
+      onClick={() =>
+        setState({
+          count: state.count + 1,
+          next: state.next + 1,
+        })
+      }
+    >
+      {state.count} (neste: {state.next})
+    </button>
+  );
+}
+```
+
+</Step>
+
+
+<Step>
+
+
+## Men kan spre ut i flere states
+
+```ts
+import React, { useState } from 'react';
+
+function CounterButton() {
+  const [count, setCount] = useState(0);
+  const [next, setNext] = useState(1);
+
+  const update = () => {
+    setCount(count + 1);
+    setNext(next + 1);
+  };
+
+  return (
+    <button onClick={update}>
+      {count} (neste: {next})
+    </button>
+  );
+}
+```
+
+</Step>
+
+
+<Step subtitle="But does it scale?">
+
+
+## Men kan spre ut i flere states
+
+```ts
+import React, { useState } from 'react';
+
+function CounterButton() {
+  const [count, setCount] = useState(0);
+  const [next, setNext] = useState(1);
+
+  const update = () => {
+    setCount(count + 1);
+    setNext(next + 1);
+  };
+
+  return (
+    <button onClick={update}>
+      {count} (neste: {next})
+    </button>
+  );
+}
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+
+
+---
+
+### `useReducer`
+
+Om du vil ha kompleks, avhengig tilstand.
+
+---
+
+<CodeSurfer>
+
+
+```ts
+import React, { useReducer } from 'react';
+
+type CounterState = {
+  count: number;
+  next: number;
+};
+
+type CounterActions =
+  | {
+      type: 'COUNT_INCREMENT';
+    }
+  | {
+      type: 'COUNT_DECREMENT';
+    };
+
+const initialState: CounterState = {
+  count: 0,
+  next: 1,
+};
+
+const counterReducer: React.Reducer<
+  CounterState,
+  CounterActions
+> = (state, action) => {
+  switch (action.type) {
+    case 'COUNT_INCREMENT':
+      return {
+        count: state.count + 1,
+        next: state.next + 1,
+      };
+    case 'COUNT_DECREMENT':
+      if (state.next === 0) {
+        return state;
+      }
+
+      return {
+        count: state.count - 1,
+        next: state.next - 1,
+      };
+  }
+};
+
+function CounterButton() {
+  const [state, dispatch] = useReducer(
+    counterReducer,
+    initialState,
+  );
+  const increment = () =>
+    dispatch({ type: 'COUNT_INCREMENT' });
+  const decrement = () =>
+    dispatch({ type: 'COUNT_DECREMENT' });
+
+  return (
+    <div>
+      <p>{state.count}</p>
+      <button onClick={increment}>Increment</button>
+      <button onClick={decrement}>Decrement</button>
+    </div>
+  );
+}
+```
+
+```diff 3:6
+
+```
+
+```diff 16:19
+
+```
+
+```diff 8:14
+
+```
+
+```diff 21:41
+
+```
+
+```diff 26,31
+
+```
+
+```diff 44:47
+
+```
+
+```diff 48:51
+
+```
+
+```diff 55:57
+
+```
+
+</CodeSurfer>
+
+
+---
+
+## Lytting på data
+
+---
+
+<CodeSurferColumns themes={[dracula, github]} sizes={[1,2]}>
+
+
+<Step>
+
+
+### `useMemo`
+
+```ts
+type ListProps = {
+  data: string[];
+};
+function List({ data }: ListProps) {
+  const sortedList = React.useMemo(
+    () => data.sort(sortByName),
+    [data],
+  );
+
+  return (
+    <ul>
+      {sortedList.map((val) => (
+        <li key={val}>{val}</li>
+      ))}
+    </ul>
+  );
+}
+
+function sortByName() {
+  // implementation
+}
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+

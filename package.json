@@ -1,0 +1,13 @@
+{
+  "name": "@variant/course-frontend",
+  "private": true,
+  "devDependencies": {
+    "code-surfer": "3.0.0",
+    "mdx-deck": "3.0.13"
+  },
+  "scripts": {
+    "start:accessibility": "mdx-deck ./accessibility/deck.mdx",
+    "start:react-typescript": "mdx-deck ./react-typescript/deck.mdx",
+    "start:react-hooks": "mdx-deck ./react-hooks/deck.mdx"
+  }
+}
