@@ -503,6 +503,12 @@ function CounterButton() {
 
 ---
 
+## Oppgaver
+
+1. Lag en komponent som skriver ut tekst fra en input-boks
+
+---
+
 ## Lytting på data
 
 ---
@@ -923,8 +929,6 @@ function MyComponent({ title }: { title: string }) {
 
 ---
 
-##
-
 <CodeSurferColumns themes={[dracula, github]} sizes={[1,2]}>
 
 
@@ -1183,6 +1187,13 @@ function Avatar({ username }: AvatarProps) {
 
 </CodeSurferColumns>
 
+
+---
+
+## Oppgaver
+
+1. Lag en komponent som viser tekst fra navn som ligger i URL Query Parameter.
+1. Lag en komponent som viser et "Github visittkort" av bruker spesifisert av URL Query Parameter
 
 ---
 
@@ -1509,7 +1520,7 @@ function Avatar({ username }: AvatarProps) {
 
 
 ```ts
-const useFavicon = (title: string) => {
+const useDocumentTitle = (title: string) => {
   useEffect(() => {
     document.title = title;
   }, [title]);
@@ -1930,3 +1941,27 @@ function useFetchGithubAvatar(
 
 </CodeSurfer>
 
+
+---
+
+## Oppgaver:
+
+Skriv en custom hook for en counter med increment og decrement
+
+(avansert) Skriv en custom hook for å polle data fra Github trend-api:
+
+https://ghapi.huchen.dev/repositories?language=javascript
+
+---
+
+## Context
+
+---
+
+Noen ganger kan det bli tungvindt å sende data over flere ledd.
+
+Eller du ønsker å samle tilstandsendringer på ett sted.
+
+---
+
+<Image src={imgs.context} />
