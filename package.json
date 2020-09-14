@@ -9,6 +9,7 @@
     "start:accessibility": "mdx-deck ./accessibility/deck.mdx",
     "start:react-typescript": "mdx-deck ./react-typescript/deck.mdx",
     "start:react-hooks": "mdx-deck ./react-hooks/deck.mdx",
+    "start:case": "mdx-deck ./case/deck.mdx",
     "build": "sh build.sh"
   }
 }

@@ -1,0 +1,188 @@
+import {
+  Image,
+  Invert,
+  Notes,
+  Appear,
+  Head,
+} from 'mdx-deck';
+
+import { github, dracula } from '@code-surfer/themes';
+import customTheme from '../custom-theme';
+export const theme = customTheme(dracula);
+
+import ImageLayout from '../image-split-layout';
+import * as imgs from '../images';
+
+<Head>
+  <title>Frontendkurs – React Hooks</title>
+  {Object.values(imgs).map(function (img) {
+    <link rel="preload" as="image" href={img} />;
+  })}
+</Head>
+
+<Image
+  src={imgs.bg}
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: '1rem',
+    color: 'black',
+    backgroundColor: 'black',
+  }}
+>
+<Horizontal>
+
+
+# Frontendkurs 2020
+
+### Dag 2
+
+</Horizontal>
+</Image>
+
+
+---
+
+## Dagens agenda
+
+- Casearbeid
+  - Custom Hooks
+  - Bibliotek app
+  - indexedDB
+
+---
+
+## Bootstrap prosjekt
+
+For å kjøre lokalt, git clone || npx
+
+- [var.show/dag-2-boostrap-git](http://var.show/dag-2-boostrap-git)
+
+Codesandbox:
+
+- [var.show/dag-2-bootstrap-codesandbox](http://var.show/dag-2-bootstrap-codesandbox)
+
+---
+
+## Case 1 - Custom hooks (20min)
+
+> Som en utvikler ønsker jeg å få egne hooks som tar seg av komplekse operasjoner slik at jeg kan lettere jobbe med visningslogikk.
+
+1.  Lag en egen hook som tar i mot en async funksjon,
+    og returnerer resultatet, state og error
+
+```tsx
+const { data, state, error } = useAsync(asyncFn);
+
+// or
+
+const [data, state, error] = useAsync(asyncFn);
+```
+
+<Notes>
+Ting å tenkte på for 1:
+
+
+[] vs {}?
+isLoading vs "initial" | "pending" | "success" | "error"?
+Generic typing?
+Skal vi håndtere manuell reexecution?
+Default value?
+
+</Notes>
+
+
+---
+
+## Case 1 - Custom hooks (20min)
+
+2.  Lag en hook som håndterer all logikken til
+    fetch
+
+Eksempel
+
+```tsx
+const {
+  data,
+  state,
+  error,
+} = useFetch('https://example.com', { method: 'GET' });
+```
+
+<Notes>
+Ting å tenkte på:
+
+
+    Kan vi gjennbruke noe vi allerede har laget?
+
+    Hva skal vi gjøre for å triggre fetch.
+
+    Hva skal skje hvis vi ikke ønsker å triggre med en gang?
+
+    Hvordan bør vi håndtere retrigger av spørring før første er ferdig.
+
+    Generic typing
+
+</Notes>
+
+
+---
+
+## Case 1 - Custom hooks (20 min)
+
+3. Lag en hook som håndtere debouncing logikk for state.
+
+```tsx
+const debouncedData = useDebounce(
+  rapidlyChangingValue,
+  500,
+);
+```
+
+---
+
+## Case - 2.0 (2x 45min)
+
+Libero Nacho
+
+> Som en leseentusiast ønsker jeg å kunne søke etter bøker på titler og forfattere, og få en liste over relevante resultater.
+
+1. Lag et søkefelt som trigger fetch mot Open Library sitt api.
+1. Endepunkt til spørring `/api/search?q=${query}`
+1. Vis feedback for alle typer states
+1. Implementer paging
+1. Lag sortering på listen, på "title" og "author"
+1. Gjør listen universelt utformet, i.e navigering av elementer og skjermleser.
+
+<Notes>
+Kan vi reduser megde data som blir sendt til klienten?
+
+
+</Notes>
+
+
+---
+
+## Case - 2.1 (45 min)
+
+> Som en leseentusiast ønsker jeg å kunne se mer informasjon om boken og forfatteren fra listen slik at jeg kan se mer om boken.
+
+1. Lag en infokomponent som henter data når brukeren trykker på elementet i listen
+   1. `/api/books?bibkeys=OLID:${OLID}`
+1. Hent og vis informasjon om forfatteren for boken.
+   1. `/api/authors/${OLID}`
+1. Hent bilder av forfatteren, og list frem alle bildene av bøkene
+
+---
+
+## Case - 2.2 (45 min)
+
+> Som en lesehest, ønsker jeg å kunne lagre mine funn i en lese/favoritt-liste, slik at jeg kan slippe å søke på disse igjen.
+
+1. Lag en Context som lar oss vise alle favoritter, legge til ny favoritt og fjerne eksisterende.
+1. Implementer context i listevisingen fra 2.0 og gjør det mulig å legge inn nye favoritter.
+1. Lag en komponent som lister ut alle favoritter.
+1. La brukeren kunne legge til i fravoritter fra bokinfokomponenten
+
+---
