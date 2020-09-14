@@ -1965,3 +1965,690 @@ Eller du ønsker å samle tilstandsendringer på ett sted.
 ---
 
 <Image src={imgs.context} />
+
+---
+
+### Klassiske Eksempler
+
+1. Theming
+1. Språkstøtte
+1. "Global atom state"
+1. "Module atom state"
+
+---
+
+<CodeSurfer>
+
+
+```ts title="Gitt modeller"
+type Theme = {};
+type Themes = {
+  light: Theme;
+  dark: Theme;
+};
+const themes: Themes = {
+  light: {},
+  dark: {},
+};
+```
+
+```ts
+type Theme = {};
+type Themes = {
+  light: Theme;
+  dark: Theme;
+};
+const themes: Themes = {
+  light: {},
+  dark: {},
+};
+
+type ThemeContextValue = {
+  theme: Theme;
+  updateTheme(themeKey: keyof Themes): void;
+};
+```
+
+```ts 7,8,13
+type Theme = {};
+type Themes = {
+  light: Theme;
+  dark: Theme;
+};
+const themes: Themes = {
+  light: {},
+  dark: {},
+};
+
+type ThemeContextValue = {
+  theme: Theme;
+  updateTheme(themeKey: keyof Themes): void;
+};
+```
+
+```ts
+type Theme = {};
+type Themes = {
+  light: Theme;
+  dark: Theme;
+};
+const themes: Themes = {
+  light: {},
+  dark: {},
+};
+
+type ThemeContextValue = {
+  theme: Theme;
+  updateTheme(themeKey: keyof Themes): void;
+};
+
+const ThemeContext = createContext<ThemeContextValue>({
+  theme: themes.light,
+  updateTheme() {},
+});
+
+export default ThemeContext;
+```
+
+</CodeSurfer>
+
+
+---
+
+<CodeSurferColumns themes={[dracula, github]} sizes={[2,1]}>
+
+
+<Step>
+
+
+```ts
+import ThemeContext from './themeContext.ts';
+
+function App() {
+  const [themeName, updateTheme] = useState<keyof Themes>(
+    'light',
+  );
+  const theme = themes[themeName];
+
+  return (
+    <ThemeContext.Provider value={{ theme, updateTheme }}>
+      <main>
+        <h1>Hello, World!</h1>
+      </main>
+    </ThemeContext.Provider>
+  );
+}
+```
+
+```ts
+// file: themeContext.ts
+
+type Theme = {};
+type Themes = {
+  light: Theme;
+  dark: Theme;
+};
+const themes: Themes = {
+  light: {},
+  dark: {},
+};
+
+type ThemeContextValue = {
+  theme: Theme;
+  updateTheme(themeKey: keyof Themes): void;
+};
+
+const ThemeContext = createContext<ThemeContextValue>({
+  theme: themes.light,
+  updateTheme() {},
+});
+
+export default ThemeContext;
+```
+
+</Step>
+
+
+<Step>
+
+
+```ts 4:7
+import ThemeContext from './themeContext.ts';
+
+function App() {
+  const [themeName, updateTheme] = useState<keyof Themes>(
+    'light',
+  );
+  const theme = themes[themeName];
+
+  return (
+    <ThemeContext.Provider value={{ theme, updateTheme }}>
+      <main>
+        <h1>Hello, World!</h1>
+      </main>
+    </ThemeContext.Provider>
+  );
+}
+```
+
+```ts
+// file: themeContext.ts
+
+type Theme = {};
+type Themes = {
+  light: Theme;
+  dark: Theme;
+};
+const themes: Themes = {
+  light: {},
+  dark: {},
+};
+
+type ThemeContextValue = {
+  theme: Theme;
+  updateTheme(themeKey: keyof Themes): void;
+};
+
+const ThemeContext = createContext<ThemeContextValue>({
+  theme: themes.light,
+  updateTheme() {},
+});
+
+export default ThemeContext;
+```
+
+</Step>
+
+
+<Step subtitle="Abstraksjonslekasje">
+
+
+```ts 10,14
+import ThemeContext from './themeContext.ts';
+
+function App() {
+  const [themeName, updateTheme] = useState<keyof Themes>(
+    'light',
+  );
+  const theme = themes[themeName];
+
+  return (
+    <ThemeContext.Provider value={{ theme, updateTheme }}>
+      <main>
+        <h1>Hello, World!</h1>
+      </main>
+    </ThemeContext.Provider>
+  );
+}
+```
+
+```ts
+// file: themeContext.ts
+
+type Theme = {};
+type Themes = {
+  light: Theme;
+  dark: Theme;
+};
+const themes: Themes = {
+  light: {},
+  dark: {},
+};
+
+type ThemeContextValue = {
+  theme: Theme;
+  updateTheme(themeKey: keyof Themes): void;
+};
+
+const ThemeContext = createContext<ThemeContextValue>({
+  theme: themes.light,
+  updateTheme() {},
+});
+
+export default ThemeContext;
+```
+
+</Step>
+
+
+<Step subtitle="Bedre">
+
+
+```ts
+import ThemeContextProvider from './themeContext.ts';
+
+function App() {
+  return (
+    <ThemeContextProvider>
+      <main>
+        <h1>Hello, World!</h1>
+      </main>
+    </ThemeContextProvider>
+  );
+}
+```
+
+```ts
+// file: themeContext.ts
+
+type Theme = {};
+type Themes = {
+  light: Theme;
+  dark: Theme;
+};
+const themes: Themes = {
+  light: {},
+  dark: {},
+};
+
+type ThemeContextValue = {
+  theme: Theme;
+  updateTheme(themeKey: keyof Themes): void;
+};
+
+const ThemeContext = createContext<ThemeContextValue>({
+  theme: themes.light,
+  updateTheme() {},
+});
+
+export default function ThemeContextProvider({
+  children,
+}: React.PropsWithChildren<{}>) {
+  const [themeName, updateTheme] = useState<keyof Themes>(
+    'light',
+  );
+  const theme = themes[themeName];
+
+  return (
+    <ThemeContext.Provider value={{ theme, updateTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+```
+
+</Step>
+
+
+<Step>
+
+
+```ts
+import ThemeContextProvider from './themeContext.ts';
+
+function App() {
+  return (
+    <ThemeContextProvider>
+      <main>
+        <h1>Hello, World!</h1>
+      </main>
+    </ThemeContextProvider>
+  );
+}
+
+function MyButton() {
+  return (
+    <button style={{ backgroundColor: '#f00' }}>
+      Click me!
+    </button>
+  );
+}
+```
+
+```diff
+
+```
+
+</Step>
+
+
+<Step>
+
+
+```ts
+import ThemeContextProvider, {
+  ThemeContext,
+} from './themeContext.ts';
+
+function App() {
+  return (
+    <ThemeContextProvider>
+      <main>
+        <h1>Hello, World!</h1>
+      </main>
+    </ThemeContextProvider>
+  );
+}
+
+function MyButton() {
+  return (
+    <button style={{ backgroundColor: '#f00' }}>
+      Click me!
+    </button>
+  );
+}
+```
+
+```ts
+// file: themeContext.ts
+
+type Theme = {};
+type Themes = {
+  light: Theme;
+  dark: Theme;
+};
+const themes: Themes = {
+  light: {},
+  dark: {},
+};
+
+type ThemeContextValue = {
+  theme: Theme;
+  updateTheme(themeKey: keyof Themes): void;
+};
+
+const ThemeContext = createContext<ThemeContextValue>({
+  theme: themes.light,
+  updateTheme() {},
+});
+
+export { ThemeContext };
+
+export default function ThemeContextProvider({
+  children,
+}: React.PropsWithChildren<{}>) {
+  const [themeName, updateTheme] = useState<keyof Themes>(
+    'light',
+  );
+  const theme = themes[themeName];
+
+  return (
+    <ThemeContext.Provider value={{ theme, updateTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+```
+
+</Step>
+<Step>
+
+
+```ts
+import ThemeContextProvider, {
+  ThemeContext,
+} from './themeContext.ts';
+
+function App() {
+  return (
+    <ThemeContextProvider>
+      <main>
+        <h1>Hello, World!</h1>
+      </main>
+    </ThemeContextProvider>
+  );
+}
+
+function MyButton() {
+  const { theme } = React.useContext(ThemeContext);
+  return (
+    <button style={{ backgroundColor: '#f00' }}>
+      Click me!
+    </button>
+  );
+}
+```
+
+```diff
+
+```
+
+</Step>
+
+
+<Step>
+
+
+```ts
+import ThemeContextProvider, {
+  ThemeContext,
+} from './themeContext.ts';
+
+function App() {
+  return (
+    <ThemeContextProvider>
+      <main>
+        <h1>Hello, World!</h1>
+      </main>
+    </ThemeContextProvider>
+  );
+}
+
+function MyButton() {
+  const { theme } = React.useContext(ThemeContext);
+  return (
+    <button style={{ backgroundColor: theme.background }}>
+      Click me!
+    </button>
+  );
+}
+```
+
+```diff
+
+```
+
+</Step>
+
+
+<Step>
+
+
+```ts 16 subtitle="Hva om context ikke er satt av en provider?"
+import ThemeContextProvider, {
+  ThemeContext,
+} from './themeContext.ts';
+
+function App() {
+  return (
+    <ThemeContextProvider>
+      <main>
+        <h1>Hello, World!</h1>
+      </main>
+    </ThemeContextProvider>
+  );
+}
+
+function MyButton() {
+  const { theme } = React.useContext(ThemeContext);
+  return (
+    <button style={{ backgroundColor: theme.background }}>
+      Click me!
+    </button>
+  );
+}
+```
+
+```diff
+
+```
+
+</Step>
+
+
+<Step>
+
+
+```ts 4
+import ThemeContextProvider, {
+  ThemeContext,
+} from './themeContext.ts';
+
+function App() {
+  return (
+    <ThemeContextProvider>
+      <main>
+        <h1>Hello, World!</h1>
+      </main>
+    </ThemeContextProvider>
+  );
+}
+
+function MyButton() {
+  const { theme } = React.useContext(ThemeContext);
+  return (
+    <button style={{ backgroundColor: theme.background }}>
+      Click me!
+    </button>
+  );
+}
+```
+
+```ts
+// file: themeContext.ts
+
+type Theme = {};
+type Themes = {
+  light: Theme;
+  dark: Theme;
+};
+const themes: Themes = {
+  light: {},
+  dark: {},
+};
+
+type ThemeContextValue = {
+  theme: Theme;
+  updateTheme(themeKey: keyof Themes): void;
+};
+
+const ThemeContext = createContext<ThemeContextValue>({
+  theme: themes.light,
+  updateTheme() {},
+});
+
+export function useTheme() {
+  const context = React.useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error(
+      'useTheme must be used within a ThemeContextProvider',
+    );
+  }
+  return context;
+}
+
+export default function ThemeContextProvider({
+  children,
+}: React.PropsWithChildren<{}>) {
+  const [themeName, updateTheme] = useState<keyof Themes>(
+    'light',
+  );
+  const theme = themes[themeName];
+
+  return (
+    <ThemeContext.Provider value={{ theme, updateTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+```
+
+</Step>
+
+
+<Step>
+
+
+```ts
+import ThemeContextProvider, {
+  useTheme,
+} from './themeContext.ts';
+
+function App() {
+  return (
+    <ThemeContextProvider>
+      <main>
+        <h1>Hello, World!</h1>
+      </main>
+    </ThemeContextProvider>
+  );
+}
+
+function MyButton() {
+  const { theme } = useTheme();
+  return (
+    <button style={{ backgroundColor: theme.background }}>
+      Click me!
+    </button>
+  );
+}
+```
+
+```ts 23:31
+// file: themeContext.ts
+
+type Theme = {};
+type Themes = {
+  light: Theme;
+  dark: Theme;
+};
+const themes: Themes = {
+  light: {},
+  dark: {},
+};
+
+type ThemeContextValue = {
+  theme: Theme;
+  updateTheme(themeKey: keyof Themes): void;
+};
+
+const ThemeContext = createContext<ThemeContextValue>({
+  theme: themes.light,
+  updateTheme() {},
+});
+
+export function useTheme() {
+  const context = React.useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error(
+      'useTheme must be used within a ThemeContextProvider',
+    );
+  }
+  return context;
+}
+
+export default function ThemeContextProvider({
+  children,
+}: React.PropsWithChildren<{}>) {
+  const [themeName, updateTheme] = useState<keyof Themes>(
+    'light',
+  );
+  const theme = themes[themeName];
+
+  return (
+    <ThemeContext.Provider value={{ theme, updateTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+
+
+---
+
+## Kjørende kode
+
+http://var.show/akva-context-theme
+
+---
+
+## Oppgaver
+
+1. Utvid Theme context til å lagre theme navn og mulighet til å toggle theme.
+1. Lag en count context som lar deg increment & decrement uansett hvor (bruk sammen med useReducer).
+1. (avansert) Lag en `LocaleDateFormat` context som har et språk og lar deg formatere `Date`-objekter.
